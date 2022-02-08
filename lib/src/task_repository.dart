@@ -2,7 +2,7 @@ import 'package:gtd_domain/gtd_domain.dart';
 import 'package:gtd_domain/src/repository.dart';
 
 class TaskRepository implements Repository<Task> {
-  final List<Task> _tasks = [];
+  List<Task> _tasks = [];
 
   // Singleton
   TaskRepository._shared();
@@ -42,5 +42,11 @@ class TaskRepository implements Repository<Task> {
   @override
   void removeAt(int index) {
     _tasks.removeAt(index);
+  }
+}
+
+extension Testing on TaskRepository {
+  void reset() {
+    _tasks = [];
   }
 }
