@@ -49,4 +49,11 @@ extension Testing on TaskRepository {
   void reset() {
     _tasks = [];
   }
+
+  void addTestData() {
+    // un bucle for de 1 a 100
+    // que añade tareas en estado toDo (si el índice es par)
+    // y en estado done (si es impar)
+    // OJO: mira a ver si int es un objeto y si tiene métodos que sirvan para esto
+  }
 }
