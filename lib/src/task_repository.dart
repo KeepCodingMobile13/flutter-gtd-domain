@@ -1,12 +1,13 @@
 import 'package:gtd_domain/gtd_domain.dart';
 import 'package:gtd_domain/src/repository.dart';
+import 'package:updatable/updatable.dart';
 
-class TaskRepository implements Repository<Task> {
+class TaskRepository with Updatable implements Repository<Task> {
   List<Task> _tasks = [];
 
   // Singleton
-  TaskRepository._shared();
-  static final shared = TaskRepository._shared();
+  TaskRepository._hidden();
+  static final shared = TaskRepository._hidden();
 
   // Overrides
   @override
@@ -24,24 +25,32 @@ class TaskRepository implements Repository<Task> {
 
   @override
   void insert(int index, Task element) {
-    _tasks.insert(index, element);
+    changeState(() {
+      _tasks.insert(index, element);
+    });
   }
 
   @override
   void move(int from, int to) {
     final taskFrom = _tasks[from];
-    _tasks.removeAt(from);
-    _tasks.insert(to, taskFrom);
+    batchChangeState(() {
+      _tasks.removeAt(from);
+      _tasks.insert(to, taskFrom);
+    });
   }
 
   @override
   void remove(Task element) {
-    _tasks.remove(element);
+    changeState(() {
+      _tasks.remove(element);
+    });
   }
 
   @override
   void removeAt(int index) {
-    _tasks.removeAt(index);
+    changeState(() {
+      _tasks.removeAt(index);
+    });
   }
 }
 
@@ -50,10 +59,18 @@ extension Testing on TaskRepository {
     _tasks = [];
   }
 
-  void addTestData() {
+  void addTestData({int amount = 100}) {
     // un bucle for de 1 a 100
     // que añade tareas en estado toDo (si el índice es par)
     // y en estado done (si es impar)
     // OJO: mira a ver si int es un objeto y si tiene métodos que sirvan para esto
+    for (int i = 0; i < amount; i++) {
+      if (i.isEven) {
+        TaskRepository.shared
+            .add(Task.toDo(description: 'Something I should do $i'));
+      } else {
+        TaskRepository.shared.add(Task.done(description: 'A finished task $i'));
+      }
+    }
   }
 }

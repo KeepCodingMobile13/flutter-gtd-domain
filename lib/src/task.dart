@@ -1,5 +1,8 @@
+import 'package:gtd_domain/gtd_domain.dart';
+import 'package:updatable/updatable.dart';
+
 class ImmutableTask {
-  late final String _description;
+  late String _description;
 
   // Accessors
   String get description => _description;
@@ -34,13 +37,15 @@ class ImmutableTask {
 
 enum TaskState { toDo, doing, done }
 
-class Task extends ImmutableTask {
+class Task extends ImmutableTask with Updatable {
   late TaskState _state;
 
   TaskState get state => _state;
   set state(TaskState newValue) {
     if (newValue != _state) {
-      _state = newValue;
+      changeState(() {
+        _state = newValue;
+      });
     }
   }
 
